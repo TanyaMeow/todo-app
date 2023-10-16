@@ -1,0 +1,25 @@
+import React, {Component} from "react";
+import {FunctionalTasks} from "./FunctionalTasks";
+import {TasksContainer} from "./TasksContainer";
+import {ButtonCreateTask} from "./ButtonCreateTask";
+
+export class TodoApp extends Component<any, any>{
+    render() {
+        return (
+            <div className="todo_block">
+                <div className="todo_container">
+                    <div className="wrapper">
+                        <div className="todo_task_container">
+                            <div className="header_todo">
+                                <h1 className="title">TODO Task</h1>
+                                <FunctionalTasks />
+                            </div>
+                            <TasksContainer />
+                            <ButtonCreateTask />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
