@@ -19,7 +19,6 @@ export class TodoApp extends Component<any, any>{
 
     setTask(task: object) {
         this.setState({...this.state, tasks: this.state.tasks.push(task)});
-        console.log(this.state.tasks);
     }
 
     render() {
