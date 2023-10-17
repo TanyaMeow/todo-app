@@ -5,7 +5,7 @@ export class PopupCreateTask extends Component<any, any> {
         const task = {
             title: '',
             completed: false,
-            userId: 0
+            taskId: Math.floor(Math.random() * 100)
         }
 
         return (
