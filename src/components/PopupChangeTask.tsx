@@ -1,7 +1,15 @@
 import React, {Component} from "react";
 import {TaskInterface} from "./TodoApp";
 
-export class PopupChangeTask extends Component<any, any> {
+type PopupChangeTaskState = {}
+type PopupChangeTaskProps = {
+    id: number,
+    change: boolean,
+    onChangeTask(id: number, task:TaskInterface): void,
+    onClosingPopup(change: boolean, id: number | null): void
+}
+
+export class PopupChangeTask extends Component<PopupChangeTaskProps, PopupChangeTaskState> {
     render(){
         const task: TaskInterface = {
             title: '',
@@ -19,7 +27,7 @@ export class PopupChangeTask extends Component<any, any> {
                             this.props.onChangeTask(task.taskId, task);
                             this.props.onClosingPopup(false, this.props.id);
                         }}>Изменить</button>
-                        <p className="cancel" onClick={() => this.props.onClosingPopup(false)}>Отмена</p>
+                        <p className="cancel" onClick={() => this.props.onClosingPopup(false, null)}>Отмена</p>
                     </div>
                 </div>
             </div>

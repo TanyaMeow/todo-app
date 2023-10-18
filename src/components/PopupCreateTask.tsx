@@ -1,6 +1,14 @@
 import React, {Component} from "react";
+import {TaskInterface} from "./TodoApp";
 
-export class PopupCreateTask extends Component<any, any> {
+type PopupCreateTaskState = {}
+type PopupCreateTaskProps = {
+    ascent: boolean,
+    onNewTask(task: TaskInterface): void
+    onClosingPopup(change: boolean): void
+}
+
+export class PopupCreateTask extends Component<PopupCreateTaskProps, PopupCreateTaskState> {
     render() {
         const task = {
             title: '',

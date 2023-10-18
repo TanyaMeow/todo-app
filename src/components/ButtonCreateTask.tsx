@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 
-export class ButtonCreateTask extends Component<any, any>{
+type ButtonCreateTaskState = {
+
+}
+type ButtonCreateTaskProps = {
+    onChangeAscent(change: boolean): void
+}
+
+export class ButtonCreateTask extends Component<ButtonCreateTaskProps, ButtonCreateTaskState>{
 
     render() {
         return (

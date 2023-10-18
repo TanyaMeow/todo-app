@@ -2,7 +2,14 @@ import React, {Component} from "react";
 import changeTask from '../icons/change.svg';
 import deleteTask from '../icons/delete.svg';
 
-export class CommandTask extends Component<any, any>{
+type CommandTaskState = {}
+type CommandTaskProps = {
+    id: number,
+    onClosingPopup(change: boolean, id: number): void,
+    onRemoveTask(id: number): void
+}
+
+export class CommandTask extends Component<CommandTaskProps, CommandTaskState>{
     render() {
         return (
             <div className="commands_task">

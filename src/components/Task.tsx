@@ -1,13 +1,16 @@
 import React, {Component} from "react";
 import {CommandTask} from "./CommandTask";
 
+type TaskState = {}
 type TaskProps = {
     title: string,
     taskId: number,
-    completed: boolean
+    completed: boolean,
+    onClosingPopup(change: boolean, id: number): void,
+    onRemoveTask(id: number): void
 }
 
-export class Task extends Component<any, TaskProps>{
+export class Task extends Component<TaskProps, TaskState>{
     render() {
         return (
             <div className="task" key={this.props.taskId}>
@@ -16,8 +19,6 @@ export class Task extends Component<any, TaskProps>{
                     <p className="name_task">{this.props.title}</p>
                 </div>
                 <CommandTask id={this.props.taskId}
-                             title={this.props.title}
-                             onChangeTask={(id: number) => this.props.onChangeTask(id)}
                              onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}
                              onRemoveTask={(id: number) => this.props.onRemoveTask(id)}/>
             </div>
