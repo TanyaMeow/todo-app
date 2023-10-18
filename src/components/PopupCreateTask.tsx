@@ -4,8 +4,8 @@ export class PopupCreateTask extends Component<any, any> {
     render() {
         const task = {
             title: '',
+            taskId: Math.floor(Math.random() * 100),
             completed: false,
-            taskId: Math.floor(Math.random() * 100)
         }
 
         return (
