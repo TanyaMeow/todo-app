@@ -8,10 +8,10 @@ export class TasksContainer extends Component<any, any> {
                 {this.props.tasks.map((task: any, key: number) => <Task key={key}
                                                                         title={task.title}
                                                                         taskId={task.taskId}
-                                                                        completes={task.completed}
-                                                                        onChangeTask={(id: number, change: boolean, title: string) => this.props.onChangeTask(id, change, title)}
+                                                                        completed={task.completed}
+                                                                        onChangeTask={(id: number) => this.props.onChangeTask(id)}
                                                                         onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
-                                                                        onClosingPopup={(change: boolean) => this.props.onClosingPopup(change)}/>)
+                                                                        onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}/>)
                 }
             </div>
         )

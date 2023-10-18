@@ -4,37 +4,34 @@ import {TasksContainer} from "./TasksContainer";
 import {ButtonCreateTask} from "./ButtonCreateTask";
 import {PopupCreateTask} from "./PopupCreateTask";
 
-import {TodoApi} from "../TodoApi/TodoApi";
 import {PopupChangeTask} from "./PopupChangeTask";
+import {MockTodoApi, TodoApi} from "../TodoApi/TodoApi";
 
-class MockTodoApi implements TodoApi {
-    static GET(): [{ }] {
-        // @ts-ignore
-        return (localStorage.getItem('tasks') === null) ? [] : JSON.parse(localStorage.getItem('tasks'));
-    }
+export interface task {
+    title: string,
+    taskId: number,
+    completed: boolean
+}
+type TodoAppState = {
+    tasks: task[],
+    ascent: boolean,
+    change: boolean,
+    id: number
+}
+type TodoAppProps = {
 
-    static POST(task: object): void {
-        // @ts-ignore
-        const tasks = this.GET();
-        localStorage.setItem('tasks', JSON.stringify([...tasks, task]));
-    }
-
-    static UPDATE(task: {}): {} {
-        return {};
-    }
-
-    static DELETE(task: {} | [{}]): void {
-
-    }
 }
 
-export class TodoApp extends Component<any, any>{
+export class TodoApp extends Component<TodoAppProps, TodoAppState>{
+    todoApi: TodoApi = new MockTodoApi();
+
     constructor(props: any) {
         super(props);
         this.state = {
             tasks: [],
             ascent: false,
-            change: false
+            change: false,
+            id: 0
         }
     }
 
@@ -42,21 +39,34 @@ export class TodoApp extends Component<any, any>{
         this.setState({...this.state, ascent: change});
     }
 
-    setTask(task: object) {
-        MockTodoApi.POST(task);
-        this.setState({tasks: this.state.tasks.push(task)});
+    changeTaskPopup(change: boolean, id: number): void {
+        this.setState((state: any) => {
+            return {...state, id: id, change: change}
+        });
     }
 
-    changeTask(id: number, change: boolean, title: string) {
-        this.changeAscent(change);
+    setTask(task: task) {
+        // this.todoApi.post(task);
+        // @ts-ignore
+        this.setState({...this.state, tasks: this.state.tasks.push(task)});
     }
 
-    changeTaskPopup(change: boolean) {
-        this.setState({...this.state, change: change});
+    changeTask(id: number, newTask: task): void {
+
+        this.setState((state: TodoAppState) => {
+            const updatedTasks = state.tasks.map(task => {
+                if (task.taskId === id) {
+                    return newTask;
+                }
+                return task;
+            });
+
+            return { ...state, tasks: updatedTasks };
+        });
     }
 
-    removeTask(id: number) {
-        let newTasks = this.state.tasks.filter((task: any) => task.taskId !== id);
+    removeTask(id: number): void {
+        let newTasks: task[] = this.state.tasks.filter((task: task) => task.taskId !== id);
         this.setState({...this.state, tasks: newTasks});
     }
 
@@ -65,18 +75,19 @@ export class TodoApp extends Component<any, any>{
             <div className="todo_task_container">
                 <PopupCreateTask ascent={this.state.ascent}
                                  onClosingPopup={(change: boolean) => this.changeAscent(change)}
-                                 onNewTask={(task: object) => this.setTask(task)}
+                                 onNewTask={(task: task) => this.setTask(task)}
                 />
-                <PopupChangeTask onClosingPopup={(change: boolean) => this.changeTaskPopup(change)}
-                                 change={this.state.change}/>
+                <PopupChangeTask onClosingPopup={(change: boolean, id: number) => this.changeTaskPopup(change, id)}
+                                 change={this.state.change}
+                                 id={this.state.id}
+                                 onChangeTask={(id: number, newTask: task) => this.changeTask(id, newTask)}/>
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
                     <FunctionalTasks />
                 </div>
                 <TasksContainer tasks = {this.state.tasks}
-                                onChangeTask={(id: number, change: boolean, title: string) => this.changeTask(id, change, title)}
                                 onRemoveTask={(id: number) => this.removeTask(id)}
-                                onClosingPopup = {(change: boolean) => this.changeTaskPopup(change)}/>
+                                onClosingPopup = {(change: boolean, id: number) => this.changeTaskPopup(change, id)}/>
                 <ButtonCreateTask onChangeAscent = {(change: boolean) => this.changeAscent(change)}/>
             </div>
         )
