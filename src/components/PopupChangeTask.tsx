@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {task} from "./TodoApp";
+import {TaskInterface} from "./TodoApp";
 
 export class PopupChangeTask extends Component<any, any> {
     render(){
-        const task: task = {
+        const task: TaskInterface = {
             title: '',
             taskId: this.props.id,
             completed: false

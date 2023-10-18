@@ -7,13 +7,13 @@ import {PopupCreateTask} from "./PopupCreateTask";
 import {PopupChangeTask} from "./PopupChangeTask";
 import {MockTodoApi, TodoApi} from "../TodoApi/TodoApi";
 
-export interface task {
+export interface TaskInterface {
     title: string,
     taskId: number,
     completed: boolean
 }
 type TodoAppState = {
-    tasks: task[],
+    tasks: TaskInterface[],
     ascent: boolean,
     change: boolean,
     id: number
@@ -45,13 +45,13 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
         });
     }
 
-    setTask(task: task) {
+    setTask(task: TaskInterface) {
         // this.todoApi.post(task);
         // @ts-ignore
         this.setState({...this.state, tasks: this.state.tasks.push(task)});
     }
 
-    changeTask(id: number, newTask: task): void {
+    changeTask(id: number, newTask: TaskInterface): void {
 
         this.setState((state: TodoAppState) => {
             const updatedTasks = state.tasks.map(task => {
@@ -66,7 +66,7 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
     }
 
     removeTask(id: number): void {
-        let newTasks: task[] = this.state.tasks.filter((task: task) => task.taskId !== id);
+        let newTasks: TaskInterface[] = this.state.tasks.filter((task: TaskInterface) => task.taskId !== id);
         this.setState({...this.state, tasks: newTasks});
     }
 
@@ -75,12 +75,12 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
             <div className="todo_task_container">
                 <PopupCreateTask ascent={this.state.ascent}
                                  onClosingPopup={(change: boolean) => this.changeAscent(change)}
-                                 onNewTask={(task: task) => this.setTask(task)}
+                                 onNewTask={(task: TaskInterface) => this.setTask(task)}
                 />
                 <PopupChangeTask onClosingPopup={(change: boolean, id: number) => this.changeTaskPopup(change, id)}
                                  change={this.state.change}
                                  id={this.state.id}
-                                 onChangeTask={(id: number, newTask: task) => this.changeTask(id, newTask)}/>
+                                 onChangeTask={(id: number, newTask: TaskInterface) => this.changeTask(id, newTask)}/>
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
                     <FunctionalTasks />
