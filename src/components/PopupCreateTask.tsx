@@ -26,7 +26,6 @@ export class PopupCreateTask extends Component<PopupCreateTaskProps, PopupCreate
                         }}/>
                         <button className="button-popup_create-task" onClick={() => {
                             this.props.onNewTask(task);
-                            this.props.onClosingPopup(false);
                         }}>Создать
                         </button>
                         <p className="cancel" onClick={() => this.props.onClosingPopup(false)}>Отмена</p>

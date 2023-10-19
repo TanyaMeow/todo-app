@@ -36,6 +36,12 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
         }
 
         this.setTaskComplete = this.setTaskComplete.bind(this);
+        this.setTask = this.setTask.bind(this);
+    }
+
+    componentDidMount() {
+        // @ts-ignore
+        this.setState({...this.state, tasks: this.todoApi.get()});
     }
 
     changeAscent(change: boolean): void {
@@ -51,43 +57,32 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
     }
 
     setTask(task: TaskInterface) {
-        // this.todoApi.post(task);
+        this.todoApi.post(task);
+
         // @ts-ignore
-        this.setState({...this.state, tasks: this.state.tasks.push(task)});
+        this.setState((state) => {
+            const tasks = this.todoApi.get();
+            return {...state, tasks: [...tasks], ascent: false}
+        });
     }
 
     changeTask(id: number, newTask: TaskInterface): void {
-
         this.setState((state: TodoAppState) => {
-            const updatedTasks = state.tasks.map(task => {
-                if (task.taskId === id) {
-                    return newTask;
-                }
-                return task;
-            });
-
-            return {...state, tasks: updatedTasks};
+            return {...state, tasks: this.todoApi.update(this.state.tasks, id, newTask)};
         });
     }
 
     removeTask(id: number): void {
-        let newTasks: TaskInterface[] = this.state.tasks.filter((task: TaskInterface) => task.taskId !== id);
-        this.setState({...this.state, tasks: newTasks});
+        this.setState({...this.state, tasks: this.todoApi.delete(this.state.tasks, id)});
     }
 
     removeCompletedTask(complete: boolean) {
-        let newTasks: TaskInterface[] = this.state.tasks.filter((task: TaskInterface) => task.completed !== complete);
-        this.setState({...this.state, tasks: newTasks});
+        this.setState({...this.state, tasks: this.todoApi.deleteCompletedTasks(this.state.tasks, complete)});
     }
 
     setTaskComplete(): void {
-        let complete = this.state.tasks.map((task: TaskInterface) => {
-            task.completed = true;
-            return task;
-        })
-
         this.setState((state: any) => {
-            return {...state, tasks: complete}
+            return {...state, tasks: this.todoApi.markTasksCompleted(this.state.tasks)}
         })
     }
 
