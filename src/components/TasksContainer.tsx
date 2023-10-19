@@ -20,7 +20,7 @@ export class TasksContainer extends Component<TasksContainerProps, TasksContaine
                                                                                   completed={task.completed}
                                                                                   onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
                                                                                   onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}
-                                                                                    onCompleteTask={(id: number, status: boolean) => this.props.onCompleteTask(id, status)}/>)
+                                                                                  onCompleteTask={(id: number, status: boolean) => this.props.onCompleteTask(id, status)}/>)
                 }
             </div>
         )

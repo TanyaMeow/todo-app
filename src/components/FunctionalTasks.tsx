@@ -8,7 +8,7 @@ type FunctionalTasksProps = {
     onRemoveCompleteTask(complete: boolean): void
 }
 
-export class FunctionalTasks extends Component<FunctionalTasksProps, FunctionalTasksState>{
+export class FunctionalTasks extends Component<FunctionalTasksProps, FunctionalTasksState> {
     render() {
         return (
             <div className="functional_task">

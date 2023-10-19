@@ -12,17 +12,16 @@ export interface TaskInterface {
     taskId: number,
     completed: boolean
 }
+
 type TodoAppState = {
     tasks: TaskInterface[],
     ascent: boolean,
     change: boolean,
     id: number
 }
-type TodoAppProps = {
+type TodoAppProps = {}
 
-}
-
-export class TodoApp extends Component<TodoAppProps, TodoAppState>{
+export class TodoApp extends Component<TodoAppProps, TodoAppState> {
     todoApi: TodoApi = new MockTodoApi();
 
     constructor(props: any) {
@@ -63,7 +62,7 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
                 return task;
             });
 
-            return { ...state, tasks: updatedTasks };
+            return {...state, tasks: updatedTasks};
         });
     }
 
@@ -118,13 +117,13 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
                     <FunctionalTasks onCompleteTasks={() => this.setTaskComplete()}
-                                        onRemoveCompleteTask={(complete: boolean) => this.removeCompletedTask(complete)}/>
+                                     onRemoveCompleteTask={(complete: boolean) => this.removeCompletedTask(complete)}/>
                 </div>
-                <TasksContainer tasks = {this.state.tasks}
+                <TasksContainer tasks={this.state.tasks}
                                 onRemoveTask={(id: number) => this.removeTask(id)}
-                                onClosingPopup = {(change: boolean, id: number) => this.changeTaskPopup(change, id)}
+                                onClosingPopup={(change: boolean, id: number) => this.changeTaskPopup(change, id)}
                                 onCompleteTask={(id: number, status: boolean) => this.setComplete(id, status)}/>
-                <ButtonCreateTask onChangeAscent = {(change: boolean) => this.changeAscent(change)}/>
+                <ButtonCreateTask onChangeAscent={(change: boolean) => this.changeAscent(change)}/>
             </div>
         )
     }

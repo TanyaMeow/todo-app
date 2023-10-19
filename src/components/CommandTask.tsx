@@ -9,7 +9,7 @@ type CommandTaskProps = {
     onRemoveTask(id: number): void
 }
 
-export class CommandTask extends Component<CommandTaskProps, CommandTaskState>{
+export class CommandTask extends Component<CommandTaskProps, CommandTaskState> {
     render() {
         return (
             <div className="commands_task">
