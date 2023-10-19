@@ -13,12 +13,12 @@ export class TasksContainer extends Component<TasksContainerProps, TasksContaine
     render() {
         return (
             <div className="tasks_container">
-                {this.props.tasks.map((task: any, key: number) => <Task key={key}
-                                                                        title={task.title}
-                                                                        taskId={task.taskId}
-                                                                        completed={task.completed}
-                                                                        onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
-                                                                        onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}/>)
+                {this.props.tasks.map((task: TaskInterface, key: number) => <Task key={key}
+                                                                                  title={task.title}
+                                                                                  taskId={task.taskId}
+                                                                                  completed={task.completed}
+                                                                                  onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
+                                                                                  onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}/>)
                 }
             </div>
         )
