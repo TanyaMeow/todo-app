@@ -7,7 +7,8 @@ type TaskProps = {
     taskId: number,
     completed: boolean,
     onClosingPopup(change: boolean, id: number): void,
-    onRemoveTask(id: number): void
+    onRemoveTask(id: number): void,
+    onCompleteTask(id: number, status: boolean): void
 }
 
 export class Task extends Component<TaskProps, TaskState>{
@@ -15,7 +16,7 @@ export class Task extends Component<TaskProps, TaskState>{
         return (
             <div className="task" key={this.props.taskId}>
                 <div className="task_complete">
-                    <input type="checkbox" checked={this.props.completed} onChange={(e) => console.log(e.target.checked)}/>
+                    <input type="checkbox" checked={this.props.completed} onChange={(e) => this.props.onCompleteTask(this.props.taskId, e.target.checked)}/>
                     <p className="name_task">{this.props.title}</p>
                 </div>
                 <CommandTask id={this.props.taskId}

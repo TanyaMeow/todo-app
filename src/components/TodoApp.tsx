@@ -34,7 +34,7 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
             id: 0
         }
 
-        this.completeTask = this.completeTask.bind(this);
+        this.setTaskComplete = this.setTaskComplete.bind(this);
     }
 
     changeAscent(change: boolean): void {
@@ -77,7 +77,7 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
         this.setState({...this.state, tasks: newTasks});
     }
 
-    completeTask(): void {
+    setTaskComplete(): void {
         let complete = this.state.tasks.map((task: TaskInterface) => {
             task.completed = true;
             return task;
@@ -86,8 +86,22 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
         this.setState((state: any) => {
             return {...state, tasks: complete}
         })
+    }
 
-        console.log(this.state.tasks);
+    setComplete(id: number, status: boolean) {
+        let complete = this.state.tasks.map((task: TaskInterface) => {
+            if (task.taskId === id) {
+                task.completed = status;
+
+                return task;
+            }
+
+            return task;
+        })
+
+        this.setState((state: any) => {
+            return {...state, tasks: complete}
+        })
     }
 
     render() {
@@ -103,12 +117,13 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
                                  onChangeTask={(id: number, newTask: TaskInterface) => this.changeTask(id, newTask)}/>
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
-                    <FunctionalTasks onCompleteTasks={() => this.completeTask()}
+                    <FunctionalTasks onCompleteTasks={() => this.setTaskComplete()}
                                         onRemoveCompleteTask={(complete: boolean) => this.removeCompletedTask(complete)}/>
                 </div>
                 <TasksContainer tasks = {this.state.tasks}
                                 onRemoveTask={(id: number) => this.removeTask(id)}
-                                onClosingPopup = {(change: boolean, id: number) => this.changeTaskPopup(change, id)}/>
+                                onClosingPopup = {(change: boolean, id: number) => this.changeTaskPopup(change, id)}
+                                onCompleteTask={(id: number, status: boolean) => this.setComplete(id, status)}/>
                 <ButtonCreateTask onChangeAscent = {(change: boolean) => this.changeAscent(change)}/>
             </div>
         )
