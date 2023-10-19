@@ -4,7 +4,8 @@ import deleteTasks from '../icons/note-remove.svg';
 
 type FunctionalTasksState = {}
 type FunctionalTasksProps = {
-    onCompleteTasks(): void
+    onCompleteTasks(): void,
+    onRemoveCompleteTask(complete: boolean): void
 }
 
 export class FunctionalTasks extends Component<FunctionalTasksProps, FunctionalTasksState>{
@@ -15,7 +16,7 @@ export class FunctionalTasks extends Component<FunctionalTasksProps, FunctionalT
                     <p>Отметить все как выполненые</p>
                     <img src={completedTasks} alt="" className="completed"/>
                 </div>
-                <div className="delete_completed" onClick={() => console.log('удалить')}>
+                <div className="delete_completed" onClick={() => this.props.onRemoveCompleteTask(true)}>
                     <p>Удалить все выполненные</p>
                     <img src={deleteTasks} alt="" className="delete_tasks"/>
                 </div>

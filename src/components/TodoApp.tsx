@@ -72,6 +72,11 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
         this.setState({...this.state, tasks: newTasks});
     }
 
+    removeCompletedTask(complete: boolean) {
+        let newTasks: TaskInterface[] = this.state.tasks.filter((task: TaskInterface) => task.completed !== complete);
+        this.setState({...this.state, tasks: newTasks});
+    }
+
     completeTask(): void {
         let complete = this.state.tasks.map((task: TaskInterface) => {
             task.completed = true;
@@ -98,7 +103,8 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState>{
                                  onChangeTask={(id: number, newTask: TaskInterface) => this.changeTask(id, newTask)}/>
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
-                    <FunctionalTasks onCompleteTasks={() => this.completeTask()}/>
+                    <FunctionalTasks onCompleteTasks={() => this.completeTask()}
+                                        onRemoveCompleteTask={(complete: boolean) => this.removeCompletedTask(complete)}/>
                 </div>
                 <TasksContainer tasks = {this.state.tasks}
                                 onRemoveTask={(id: number) => this.removeTask(id)}
