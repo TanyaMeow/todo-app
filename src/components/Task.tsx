@@ -6,7 +6,7 @@ type TaskProps = {
     title: string,
     taskId: number,
     completed: boolean,
-    onClosingPopup(change: boolean, id: number): void,
+    onClosingPopup(change: boolean, id: number, title: string): void,
     onRemoveTask(id: number): void,
     onCompleteTask(id: number, status: boolean): void
 }
@@ -21,7 +21,8 @@ export class Task extends Component<TaskProps, TaskState> {
                     <p className="name_task">{this.props.title}</p>
                 </div>
                 <CommandTask id={this.props.taskId}
-                             onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}
+                             title={this.props.title}
+                             onClosingPopup={(change: boolean, id: number, title: string) => this.props.onClosingPopup(change, id, title)}
                              onRemoveTask={(id: number) => this.props.onRemoveTask(id)}/>
             </div>
         )

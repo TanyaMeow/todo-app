@@ -17,7 +17,8 @@ type TodoAppState = {
     tasks: TaskInterface[],
     ascent: boolean,
     change: boolean,
-    id: number
+    id: number,
+    title: string
 }
 type TodoAppProps = {}
 
@@ -30,7 +31,8 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
             tasks: [],
             ascent: false,
             change: false,
-            id: 0
+            id: 0,
+            title: ''
         }
 
         this.setTaskComplete = this.setTaskComplete.bind(this);
@@ -40,10 +42,12 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
         this.setState({...this.state, ascent: change});
     }
 
-    changeTaskPopup(change: boolean, id: number): void {
+    changeTaskPopup(change: boolean, id: number, title: string): void {
         this.setState((state: any) => {
-            return {...state, id: id, change: change}
+            return {...state, id: id, change: change, title: title}
         });
+
+        console.log(this.state.title);
     }
 
     setTask(task: TaskInterface) {
@@ -110,9 +114,10 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
                                  onClosingPopup={(change: boolean) => this.changeAscent(change)}
                                  onNewTask={(task: TaskInterface) => this.setTask(task)}
                 />
-                <PopupChangeTask onClosingPopup={(change: boolean, id: number) => this.changeTaskPopup(change, id)}
+                <PopupChangeTask onClosingPopup={(change: boolean, id: number, title: string) => this.changeTaskPopup(change, id, title)}
                                  change={this.state.change}
                                  id={this.state.id}
+                                 title={this.state.title}
                                  onChangeTask={(id: number, newTask: TaskInterface) => this.changeTask(id, newTask)}/>
                 <div className="header_todo">
                     <h1 className="title">TODOTask</h1>
@@ -121,7 +126,7 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
                 </div>
                 <TasksContainer tasks={this.state.tasks}
                                 onRemoveTask={(id: number) => this.removeTask(id)}
-                                onClosingPopup={(change: boolean, id: number) => this.changeTaskPopup(change, id)}
+                                onClosingPopup={(change: boolean, id: number, title: string) => this.changeTaskPopup(change, id, title)}
                                 onCompleteTask={(id: number, status: boolean) => this.setComplete(id, status)}/>
                 <ButtonCreateTask onChangeAscent={(change: boolean) => this.changeAscent(change)}/>
             </div>

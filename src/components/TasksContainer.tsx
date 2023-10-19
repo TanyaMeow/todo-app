@@ -5,7 +5,7 @@ import {TaskInterface} from "./TodoApp";
 type TasksContainerState = {}
 type TasksContainerProps = {
     tasks: TaskInterface[]
-    onClosingPopup(change: boolean, id: number): void,
+    onClosingPopup(change: boolean, id: number, title: string): void,
     onRemoveTask(id: number): void,
     onCompleteTask(id: number, status: boolean): void
 }
@@ -19,7 +19,7 @@ export class TasksContainer extends Component<TasksContainerProps, TasksContaine
                                                                                   taskId={task.taskId}
                                                                                   completed={task.completed}
                                                                                   onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
-                                                                                  onClosingPopup={(change: boolean, id: number) => this.props.onClosingPopup(change, id)}
+                                                                                  onClosingPopup={(change: boolean, id: number, title: string) => this.props.onClosingPopup(change, id, title)}
                                                                                   onCompleteTask={(id: number, status: boolean) => this.props.onCompleteTask(id, status)}/>)
                 }
             </div>
