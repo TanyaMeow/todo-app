@@ -1,12 +1,12 @@
 import {TaskInterface} from "../components/TodoApp";
 
 export interface TodoApi {
-    get(): TaskInterface[]
+    get(): any
     post(task: TaskInterface): void
-    update(modifiedTask: TaskInterface): TaskInterface[]
-    delete(id: number) : TaskInterface[]
-    deleteCompletedTasks(): TaskInterface[]
-    markTasksCompleted() : TaskInterface[]
+    update(modifiedTask: TaskInterface): any
+    delete(id: number) : any
+    deleteCompletedTasks(): any
+    markTasksCompleted() : any
 }
 
 export class MockTodoApi implements TodoApi {
@@ -15,9 +15,12 @@ export class MockTodoApi implements TodoApi {
         this.storage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    get(): TaskInterface[] {
-        // @ts-ignore
-        return (this.storage.getItem('tasks') === null) ? [] : JSON.parse(localStorage.getItem('tasks'));
+    get(): any {
+        fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(() => {// @ts-ignore
+                return (this.storage.getItem('tasks') === null) ? [] : JSON.parse(localStorage.getItem('tasks'))
+                }
+            )
     }
 
     post(task: TaskInterface): void {
@@ -29,7 +32,7 @@ export class MockTodoApi implements TodoApi {
     update(modifiedTask: TaskInterface): TaskInterface[] {
         let tasks = this.get();
 
-        const updatedTasks = tasks.map(task => {
+        const updatedTasks = tasks.map((task: TaskInterface) => {
             if (task.taskId === modifiedTask.taskId) {
                 return modifiedTask;
             }
@@ -41,21 +44,34 @@ export class MockTodoApi implements TodoApi {
         return this.get();
     }
 
-    delete(id: number): TaskInterface[] {
-        let tasks = this.get();
-        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.taskId !== id);
-        this.setTasks(newTasks);
+    delete(id: number): any {
+        fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'DELETE',
+        })
+            .then(() => {
+                this.get()
+                    .then((tasks: TaskInterface[]) => {
+                        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.taskId !== id);
+                        this.setTasks(newTasks);
 
-        // @ts-ignore
-        return this.get();
+                        return this.get();
+                    });
+            })
     }
 
-    deleteCompletedTasks(): TaskInterface[] {
-        let tasks = this.get();
-        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => !task.completed);
-        this.setTasks(newTasks);
+    deleteCompletedTasks(): any {
+        fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'DELETE',
+        })
+            .then(() => {
+                this.get()
+                    .then((tasks: TaskInterface[]) => {
+                    let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => !task.completed);
+                    this.setTasks(newTasks);
 
-        return this.get();
+                    return this.get();
+                });
+            })
     }
 
     markTasksCompleted(): TaskInterface[] {
