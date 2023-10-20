@@ -1,14 +1,16 @@
 import React, {Component} from "react";
 import {CommandTask} from "./CommandTask";
+import {TaskInterface} from "./TodoApp";
 
 type TaskState = {}
 type TaskProps = {
     title: string,
     taskId: number,
     completed: boolean,
-    onClosingPopup(change: boolean, id: number, title: string): void,
+    onClosingPopup(change: boolean): void,
     onRemoveTask(id: number): void,
-    onCompleteTask(id: number, status: boolean): void
+    onCompleteTask(task: TaskInterface): void,
+    onChangeTask(task: TaskInterface): void
 }
 
 export class Task extends Component<TaskProps, TaskState> {
@@ -18,14 +20,20 @@ export class Task extends Component<TaskProps, TaskState> {
                 <div className="task_complete">
                     <input type="checkbox" checked={this.props.completed}
                            onChange={(e) => {
-                               this.props.onCompleteTask(this.props.taskId, e.target.checked);
+                               this.props.onCompleteTask({
+                                   title: this.props.title,
+                                   taskId: this.props.taskId,
+                                   completed: e.target.checked
+                               });
                            }}/>
                     <p className="name_task">{this.props.title}</p>
                 </div>
-                <CommandTask id={this.props.taskId}
+                <CommandTask taskId={this.props.taskId}
                              title={this.props.title}
-                             onClosingPopup={(change: boolean, id: number, title: string) => this.props.onClosingPopup(change, id, title)}
-                             onRemoveTask={(id: number) => this.props.onRemoveTask(id)}/>
+                             completed={this.props.completed}
+                             onClosingPopup={(change: boolean) => this.props.onClosingPopup(change)}
+                             onRemoveTask={(id: number) => this.props.onRemoveTask(id)}
+                             onChangeTask={(task: TaskInterface) => this.props.onChangeTask(task)}/>
             </div>
         )
     }
