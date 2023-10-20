@@ -46,8 +46,10 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
     }
 
     componentDidMount() {
-        // @ts-ignore
-        this.setState({...this.state, tasks: this.todoApi.get()});
+        this.todoApi.get()
+            .then((tasks: TaskInterface[]) => {
+                this.setState({...this.state, tasks: tasks});
+            })
     }
 
     closingTaskPopupCreate(change: boolean): void {
@@ -67,39 +69,58 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
     }
 
     setTask(task: TaskInterface) {
-        this.todoApi.post(task);
-
-        // @ts-ignore
-        this.setState((state) => {
-            const tasks = this.todoApi.get();
-            return {...state, tasks: [...tasks], ascent: false}
-        });
+        this.todoApi.post(task)
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState((state) => {
+                    return {...state, tasks: [...tasks], ascent: false}
+                });
+            })
     }
 
     changeTask(task: TaskInterface): void {
-        this.setState((state: TodoAppState) => {
-            return {...state, change: false, tasks: this.todoApi.update(task)};
-        });
+        this.todoApi.update(task)
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState((state: TodoAppState) => {
+                    return {...state, change: false, tasks: tasks};
+                });
+            })
     }
 
     removeTask(id: number): void {
-        this.setState({...this.state, tasks: this.todoApi.delete(id)});
+        this.todoApi.delete(id)
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState({...this.state, tasks: tasks});
+            })
+
     }
 
     removeCompletedTask() {
-        this.setState({...this.state, tasks: this.todoApi.deleteCompletedTasks()});
+        this.todoApi.deleteCompletedTasks()
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState({...this.state, tasks: tasks})
+            })
     }
 
     setTaskComplete(): void {
-        this.setState((state: any) => {
-            return {...state, tasks: this.todoApi.markTasksCompleted()}
-        })
+        this.todoApi.markTasksCompleted()
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState({...this.state, tasks: tasks})
+            })
     }
 
     setComplete(task: TaskInterface) {
-        this.setState((state: TodoAppState) => {
-            return {...state, tasks: this.todoApi.update(task)};
-        });
+        this.todoApi.update(task)
+            .then(() => this.todoApi.get())
+            .then((tasks: TaskInterface[]) => {
+                this.setState((state: TodoAppState) => {
+                    return {...state, tasks: tasks};
+                });
+            })
     }
 
     render() {
