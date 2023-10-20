@@ -3,9 +3,9 @@ import {TaskInterface} from "../components/TodoApp";
 export interface TodoApi {
     get(): TaskInterface[]
     post(task: TaskInterface): void
-    update(id: number, newTask: TaskInterface): TaskInterface[]
+    update(modifiedTask: TaskInterface): TaskInterface[]
     delete(id: number) : TaskInterface[]
-    deleteCompletedTasks(complete: boolean, tasks: TaskInterface[]): TaskInterface[]
+    deleteCompletedTasks(): TaskInterface[]
     markTasksCompleted() : TaskInterface[]
 }
 
@@ -26,11 +26,12 @@ export class MockTodoApi implements TodoApi {
         this.storage.setItem('tasks', JSON.stringify([...tasks, task]));
     }
 
-    update(id: number, newTask: TaskInterface): TaskInterface[] {
+    update(modifiedTask: TaskInterface): TaskInterface[] {
         let tasks = this.get();
+
         const updatedTasks = tasks.map(task => {
-            if (task.taskId === id) {
-                return newTask;
+            if (task.taskId === modifiedTask.taskId) {
+                return modifiedTask;
             }
             return task;
         });
@@ -49,8 +50,9 @@ export class MockTodoApi implements TodoApi {
         return this.get();
     }
 
-    deleteCompletedTasks(complete: boolean, tasks: TaskInterface[]): TaskInterface[] {
-        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.completed !== complete);
+    deleteCompletedTasks(): TaskInterface[] {
+        let tasks = this.get();
+        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => !task.completed);
         this.setTasks(newTasks);
 
         return this.get();
