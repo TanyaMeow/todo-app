@@ -3,10 +3,10 @@ import {TaskInterface} from "../components/TodoApp";
 export interface TodoApi {
     get(): TaskInterface[]
     post(task: TaskInterface): void
-    update(task: TaskInterface[], id: number, newTask: TaskInterface): TaskInterface[]
-    delete(tasks: TaskInterface[], id: number) : TaskInterface[]
-    deleteCompletedTasks(tasks: TaskInterface[], complete: boolean): TaskInterface[]
-    markTasksCompleted(tasks: TaskInterface[]) : TaskInterface[]
+    update(id: number, newTask: TaskInterface): TaskInterface[]
+    delete(id: number) : TaskInterface[]
+    deleteCompletedTasks(complete: boolean, tasks: TaskInterface[]): TaskInterface[]
+    markTasksCompleted() : TaskInterface[]
 }
 
 export class MockTodoApi implements TodoApi {
@@ -21,12 +21,13 @@ export class MockTodoApi implements TodoApi {
     }
 
     post(task: TaskInterface): void {
+        let tasks = this.get();
         // @ts-ignore
-        const tasks:TaskInterface[] = this.get();
         this.storage.setItem('tasks', JSON.stringify([...tasks, task]));
     }
 
-    update(tasks: TaskInterface[], id: number, newTask: TaskInterface): TaskInterface[] {
+    update(id: number, newTask: TaskInterface): TaskInterface[] {
+        let tasks = this.get();
         const updatedTasks = tasks.map(task => {
             if (task.taskId === id) {
                 return newTask;
@@ -39,7 +40,8 @@ export class MockTodoApi implements TodoApi {
         return this.get();
     }
 
-    delete(tasks: TaskInterface[], id: number): TaskInterface[] {
+    delete(id: number): TaskInterface[] {
+        let tasks = this.get();
         let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.taskId !== id);
         this.setTasks(newTasks);
 
@@ -47,14 +49,15 @@ export class MockTodoApi implements TodoApi {
         return this.get();
     }
 
-    deleteCompletedTasks(tasks: TaskInterface[], complete: boolean): TaskInterface[] {
+    deleteCompletedTasks(complete: boolean, tasks: TaskInterface[]): TaskInterface[] {
         let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.completed !== complete);
         this.setTasks(newTasks);
 
         return this.get();
     }
 
-    markTasksCompleted(tasks: TaskInterface[]): TaskInterface[] {
+    markTasksCompleted(): TaskInterface[] {
+        let tasks = this.get();
         let complete = tasks.map((task: TaskInterface) => {
             task.completed = true;
 
