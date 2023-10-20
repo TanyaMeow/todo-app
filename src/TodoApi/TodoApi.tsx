@@ -1,88 +1,98 @@
 import {TaskInterface} from "../components/TodoApp";
 
 export interface TodoApi {
-    get(): any
-    post(task: TaskInterface): void
-    update(modifiedTask: TaskInterface): any
-    delete(id: number) : any
-    deleteCompletedTasks(): any
-    markTasksCompleted() : any
+    get(): Promise<TaskInterface[]>
+    post(task: TaskInterface): Promise<void>
+    update(modifiedTask: TaskInterface): Promise<void>
+    delete(id: number) : Promise<void>
+    deleteCompletedTasks(): Promise<void>
+    markTasksCompleted() : Promise<void>
 }
 
 export class MockTodoApi implements TodoApi {
     private storage = localStorage;
+
     private setTasks(tasks: TaskInterface[]): void {
         this.storage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    get(): any {
-        fetch('https://jsonplaceholder.typicode.com/todos')
-            .then(() => {// @ts-ignore
-                return (this.storage.getItem('tasks') === null) ? [] : JSON.parse(localStorage.getItem('tasks'))
-                }
-            )
+    private getTasks(): TaskInterface[] {
+        return (this.storage.getItem('tasks') === null) ? [] : JSON.parse(this.storage.getItem('tasks') as string)
     }
 
-    post(task: TaskInterface): void {
-        let tasks = this.get();
-        // @ts-ignore
-        this.storage.setItem('tasks', JSON.stringify([...tasks, task]));
+    get(): Promise<TaskInterface[]> {
+        return fetch('https://jsonplaceholder.typicode.com/todos')
+            .then(() => this.getTasks())
     }
 
-    update(modifiedTask: TaskInterface): TaskInterface[] {
-        let tasks = this.get();
-
-        const updatedTasks = tasks.map((task: TaskInterface) => {
-            if (task.taskId === modifiedTask.taskId) {
-                return modifiedTask;
-            }
-            return task;
-        });
-        this.setTasks(updatedTasks);
-
-        // @ts-ignore
-        return this.get();
-    }
-
-    delete(id: number): any {
-        fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'DELETE',
+    post(task: TaskInterface): Promise<void> {
+        return fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'POST',
+            body: JSON.stringify(task),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
         })
             .then(() => {
-                this.get()
-                    .then((tasks: TaskInterface[]) => {
-                        let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => task.taskId !== id);
-                        this.setTasks(newTasks);
-
-                        return this.get();
-                    });
-            })
+                this.setTasks([...this.getTasks(), task]);
+            });
     }
 
-    deleteCompletedTasks(): any {
-        fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'DELETE',
+    update(modifiedTask: TaskInterface): Promise<void> {
+        return fetch('https://jsonplaceholder.typicode.com/todos/1', {
+            method: 'PUT',
+            body: JSON.stringify(modifiedTask),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
         })
             .then(() => {
-                this.get()
-                    .then((tasks: TaskInterface[]) => {
-                    let newTasks: TaskInterface[] = tasks.filter((task: TaskInterface) => !task.completed);
-                    this.setTasks(newTasks);
-
-                    return this.get();
+                const updatedTasks = this.getTasks().map((task: TaskInterface) => {
+                    if (task.taskId === modifiedTask.taskId) {
+                        return modifiedTask;
+                    }
+                    return task;
                 });
-            })
+                this.setTasks(updatedTasks);
+            });
     }
 
-    markTasksCompleted(): TaskInterface[] {
-        let tasks = this.get();
-        let complete = tasks.map((task: TaskInterface) => {
-            task.completed = true;
-
-            return task;
+    delete(id: number): Promise<void> {
+        return fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'DELETE',
         })
-        this.setTasks(complete);
+            .then(() => {
+                const newTasks: TaskInterface[] = this.getTasks().filter((task: TaskInterface) => task.taskId !== id);
+                this.setTasks(newTasks);
+            });
+    }
 
-        return this.get();
+    deleteCompletedTasks(): Promise<void> {
+        return fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'DELETE',
+        })
+            .then(() => {
+                const newTasks: TaskInterface[] = this.getTasks().filter((task: TaskInterface) => !task.completed);
+                this.setTasks(newTasks);
+            });
+    }
+
+    markTasksCompleted(): Promise<void> {
+        return fetch('https://jsonplaceholder.typicode.com/todos', {
+            method: 'POST',
+            body: JSON.stringify(null),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then(() => {
+                const complete: TaskInterface[] = this.getTasks().map((task: TaskInterface) => {
+                    task.completed = true;
+
+                    return task;
+                })
+
+                this.setTasks(complete);
+            });
     }
 }
