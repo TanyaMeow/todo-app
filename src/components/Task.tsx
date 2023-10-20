@@ -17,7 +17,9 @@ export class Task extends Component<TaskProps, TaskState> {
             <div className="task" key={this.props.taskId}>
                 <div className="task_complete">
                     <input type="checkbox" checked={this.props.completed}
-                           onChange={(e) => this.props.onCompleteTask(this.props.taskId, e.target.checked)}/>
+                           onChange={(e) => {
+                               this.props.onCompleteTask(this.props.taskId, e.target.checked);
+                           }}/>
                     <p className="name_task">{this.props.title}</p>
                 </div>
                 <CommandTask id={this.props.taskId}

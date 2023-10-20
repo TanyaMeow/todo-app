@@ -52,8 +52,6 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
         this.setState((state: any) => {
             return {...state, id: id, change: change, title: title}
         });
-
-        console.log(this.state.title);
     }
 
     setTask(task: TaskInterface) {
@@ -68,21 +66,21 @@ export class TodoApp extends Component<TodoAppProps, TodoAppState> {
 
     changeTask(id: number, newTask: TaskInterface): void {
         this.setState((state: TodoAppState) => {
-            return {...state, tasks: this.todoApi.update(this.state.tasks, id, newTask)};
+            return {...state, tasks: this.todoApi.update(id, newTask)};
         });
     }
 
     removeTask(id: number): void {
-        this.setState({...this.state, tasks: this.todoApi.delete(this.state.tasks, id)});
+        this.setState({...this.state, tasks: this.todoApi.delete(id)});
     }
 
     removeCompletedTask(complete: boolean) {
-        this.setState({...this.state, tasks: this.todoApi.deleteCompletedTasks(this.state.tasks, complete)});
+        this.setState({...this.state, tasks: this.todoApi.deleteCompletedTasks(complete, this.state.tasks)});
     }
 
     setTaskComplete(): void {
         this.setState((state: any) => {
-            return {...state, tasks: this.todoApi.markTasksCompleted(this.state.tasks)}
+            return {...state, tasks: this.todoApi.markTasksCompleted()}
         })
     }
 
