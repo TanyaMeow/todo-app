@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import {CommandTask} from "./CommandTask";
 import {TaskInterface} from "./TodoApp";
 
@@ -10,7 +10,7 @@ type TaskProps = {
     onClosingPopup(change: boolean): void,
     onRemoveTask(id: number): void,
     onCompleteTask(task: TaskInterface): void,
-    onChangeTask(task: TaskInterface): void
+    onChangeTaskNew(task: TaskInterface): void
 }
 
 // export class Task extends Component<TaskProps, TaskState> {
@@ -58,7 +58,7 @@ export function Task(props: TaskProps) {
                              completed={props.completed}
                              onClosingPopup={(change: boolean) => props.onClosingPopup(change)}
                              onRemoveTask={(id: number) => props.onRemoveTask(id)}
-                             onChangeTask={(task: TaskInterface) => props.onChangeTask(task)}/>
+                             onChangeTask={(task: TaskInterface) => props.onChangeTaskNew(task)}/>
             </div>
         )
 }

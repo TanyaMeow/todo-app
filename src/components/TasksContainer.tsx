@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import {Task} from "./Task";
 import {TaskInterface} from "./TodoApp";
 
@@ -39,7 +39,7 @@ export function TasksContainer(props: TasksContainerProps) {
                                                                          onRemoveTask={(id: number) => props.onRemoveTask(id)}
                                                                          onClosingPopup={(change: boolean) => props.onClosingPopup(change)}
                                                                          onCompleteTask={(task: TaskInterface) => props.onCompleteTask(task)}
-                                                                         onChangeTask={(task: TaskInterface) => props.onChangeTaskNew(task)}/>)
+                                                                         onChangeTaskNew={(task: TaskInterface) => props.onChangeTaskNew(task)}/>)
             }
         </div>
     )

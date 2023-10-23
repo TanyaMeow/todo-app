@@ -40,7 +40,7 @@ export function CommandTask(props: CommandTaskProps) {
                     title: props.title,
                     taskId: props.taskId,
                     completed: props.completed
-                })
+                });
             }} className="change"/>
             <img src={deleteTask} alt="" onClick={() => props.onRemoveTask(props.taskId)} className="delete"/>
         </div>
