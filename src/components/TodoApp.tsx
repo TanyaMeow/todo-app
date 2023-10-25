@@ -1,13 +1,11 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {FunctionalTasks} from "./FunctionalTasks";
 import {TasksContainer} from "./TasksContainer";
 import {ButtonCreateTask} from "./ButtonCreateTask";
 import {PopupCreateTask} from "./PopupCreateTask";
-
 import {PopupChangeTask} from "./PopupChangeTask";
-import {MockTodoApi, TodoApi} from "../TodoApi/TodoApi";
-import {Simulate} from "react-dom/test-utils";
-import change = Simulate.change;
+import {tasksStore} from "../store/TasksStore";
+import {observer} from "mobx-react-lite";
 
 export interface TaskInterface {
     title: string,
@@ -15,36 +13,14 @@ export interface TaskInterface {
     completed: boolean
 }
 
-type TodoAppState = {
-    tasks: TaskInterface[],
-    ascent: boolean,
-    change: boolean,
-    taskCreate: {
-        taskId: number,
-        title: string,
-        completed: boolean
-    }
-}
-type TodoAppProps = {}
-
 export const PopupStateContextCreate = createContext<boolean>(false);
 export const PopupStateContextChange = createContext<boolean>(false);
 export const TaskContext = createContext({completed: false, taskId: 0, title: ""});
 
-export function TodoApp() {
-    const todoApi: TodoApi = new MockTodoApi();
-
+export const TodoApp = observer(() => {
     const [ascent, setAscent] = useState(false);
     const [change, setChange] = useState(false);
-    const [tasks, setTasks] = useState<TaskInterface[]>([]);
     const [task, setTask] = useState<TaskInterface>({completed: false, taskId: 0, title: ""});
-
-    useEffect(() => {
-        todoApi.get()
-            .then((tasks: TaskInterface[]) => {
-                setTasks(tasks);
-            })
-    }, [])
 
     function closingTaskPopupCreate(change: boolean): void {
         setAscent(change);
@@ -59,56 +35,31 @@ export function TodoApp() {
     }
 
     function createTask(task: TaskInterface) {
-        todoApi.post(task)
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTasks(tasks);
-                setAscent(false);
-            })
+        tasksStore.createTask(task);
+        setAscent(false);
     }
 
     function changeTask(task: TaskInterface): void {
-        todoApi.update(task)
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTask(task);
-                setTasks(tasks);
-                setChange(false);
-            })
+        setTask(task);
+        tasksStore.updateTasks(task);
+        setChange(false);
     }
 
     function removeTask(id: number): void {
-        todoApi.delete(id)
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTasks(tasks)
-            })
-
+        tasksStore.removeTask(id);
     }
 
     function removeCompletedTask() {
-        todoApi.deleteCompletedTasks()
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTasks(tasks);
-            })
+        tasksStore.deleteCompletedTasks();
     }
 
     function setTaskComplete(): void {
-        todoApi.markTasksCompleted()
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTasks(tasks);
-            })
+        tasksStore.markCompletedTasks();
     }
 
     function setComplete(task: TaskInterface) {
-        todoApi.update(task)
-            .then(() => todoApi.get())
-            .then((tasks: TaskInterface[]) => {
-                setTask(task);
-                setTasks(tasks);
-            })
+        setTask(task);
+        tasksStore.updateTasks(task);
     }
 
     return (
@@ -129,12 +80,12 @@ export function TodoApp() {
                 <FunctionalTasks onCompleteTasks={setTaskComplete}
                                  onRemoveCompleteTask={removeCompletedTask}/>
             </div>
-                <TasksContainer tasks={tasks}
-                                onClosingPopup={closingTaskPopupChange}
-                                onCompleteTask={setComplete}
-                                onChangeTaskNew={changeTaskCreate}
-                                onRemoveTask={removeTask}/>
+            <TasksContainer tasks={tasksStore.getTasks()}
+                            onClosingPopup={closingTaskPopupChange}
+                            onCompleteTask={setComplete}
+                            onChangeTaskNew={changeTaskCreate}
+                            onRemoveTask={removeTask}/>
             <ButtonCreateTask onChangeAscent={closingTaskPopupCreate}/>
         </div>
     )
-}
+})
