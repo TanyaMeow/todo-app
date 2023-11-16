@@ -1,18 +1,20 @@
-import React, {useContext, useEffect, useState} from "react";
-import {PopupStateContextCreate, TaskInterface} from "./TodoApp";
+import React, {useContext, JSX} from "react";
+import {PopupStateContextCreate} from "./TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
-type PopupCreateTaskState = {}
 type PopupCreateTaskProps = {
     onNewTask(task: TaskInterface): void
     onClosingPopup(change: boolean): void
+    tasks: TaskInterface[]
 }
 
-export function PopupCreateTask(props: PopupCreateTaskProps) {
-    const ascent = useContext(PopupStateContextCreate);
+export function PopupCreateTask(props: PopupCreateTaskProps): JSX.Element {
+    const ascent: boolean = useContext(PopupStateContextCreate);
+    const id: number = (props.tasks.length === 0) ? 1 : props.tasks[props.tasks.length - 1].taskId + 1;
 
-    const task = {
+    const task: TaskInterface = {
         title: '',
-        taskId: Math.floor(Math.random() * 100),
+        taskId: id,
         completed: false,
     }
 
@@ -21,7 +23,7 @@ export function PopupCreateTask(props: PopupCreateTaskProps) {
             <div className="popup">
                 <h1 className="title_popup">Создать новую задачу</h1>
                 <div className="create_task">
-                    <input className="create-task" onChange={(event) => {
+                    <input className="create-task" onChange={(event): void => {
                         task.title = event.target.value;
                     }}/>
                     <button className="button-popup_create-task" onClick={() => props.onNewTask(task)}>Создать</button>
