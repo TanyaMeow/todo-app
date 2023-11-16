@@ -1,5 +1,6 @@
 import React, {useContext, JSX} from "react";
-import {PopupStateContextChange, TaskContext, TaskInterface} from "./TodoApp";
+import {PopupStateContextChange, TaskContext} from "./TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
 type PopupChangeTaskProps = {
     onChangeTask(task: TaskInterface): void,
@@ -16,8 +17,9 @@ export function PopupChangeTask(props: PopupChangeTaskProps): JSX.Element {
                 <h1 className="title_popup">Изменить задачу</h1>
                 <div className="create_task">
                     <input className="create-task" defaultValue={task.title}
-                                                   onChange={(event) => task.title = event.target.value}/>
-                    <button className="button-popup_create-task" onClick={() => props.onChangeTask(task)}>Изменить</button>
+                           onChange={(event) => task.title = event.target.value}/>
+                    <button className="button-popup_create-task" onClick={() => props.onChangeTask(task)}>Изменить
+                    </button>
                     <p className="cancel" onClick={() => props.onClosingPopup(false)}>Отмена</p>
                 </div>
             </div>

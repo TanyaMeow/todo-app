@@ -1,6 +1,6 @@
 import React, {JSX} from "react";
 import {Task} from "./Task";
-import {TaskInterface} from "./TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
 type TasksContainerProps = {
     tasks: TaskInterface[]

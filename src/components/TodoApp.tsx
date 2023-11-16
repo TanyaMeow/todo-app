@@ -1,17 +1,11 @@
-import React, {createContext, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {FunctionalTasks} from "./FunctionalTasks";
 import {TasksContainer} from "./TasksContainer";
 import {ButtonCreateTask} from "./ButtonCreateTask";
 import {PopupCreateTask} from "./PopupCreateTask";
 import {PopupChangeTask} from "./PopupChangeTask";
-import {tasksStore} from "../store/TasksStore";
+import {TaskInterface, tasksStore} from "../store/TasksStore";
 import {observer} from "mobx-react-lite";
-
-export interface TaskInterface {
-    title: string,
-    taskId: number,
-    completed: boolean
-}
 
 export const PopupStateContextCreate: React.Context<boolean> = createContext<boolean>(false);
 export const PopupStateContextChange: React.Context<boolean> = createContext<boolean>(false);
@@ -21,6 +15,10 @@ export const TodoApp = observer(() => {
     const [ascent, setAscent] = useState<boolean>(false);
     const [change, setChange] = useState<boolean>(false);
     const [task, setTask] = useState<TaskInterface>({completed: false, taskId: 0, title: ""});
+
+    useEffect(() => {
+        tasksStore.loadTasks();
+    }, [])
 
     function closingTaskPopupCreate(change: boolean): void {
         setAscent(change);
@@ -34,20 +32,23 @@ export const TodoApp = observer(() => {
         setTask(task);
     }
 
-    function createTask(task: TaskInterface): void {
-        tasksStore.createTask(task);
+    async function createTask(task: TaskInterface): Promise<void> {
+        await tasksStore.createTask(task)
+        await tasksStore.loadTasks();
         setAscent(false);
     }
 
-    function changeTask(task: TaskInterface): void {
+    async function changeTask(task: TaskInterface): Promise<void> {
         setTask(task);
-        tasksStore.updateTasks(task);
+        await tasksStore.updateTasks(task);
+        await tasksStore.loadTasks()
         setChange(false);
     }
 
-    function setComplete(task: TaskInterface): void {
+    async function setComplete(task: TaskInterface): Promise<void> {
         setTask(task);
-        tasksStore.updateTasks(task);
+        await tasksStore.updateTasks(task);
+        await tasksStore.loadTasks();
     }
 
     return (
@@ -55,7 +56,7 @@ export const TodoApp = observer(() => {
             <PopupStateContextCreate.Provider value={ascent}>
                 <PopupCreateTask onClosingPopup={closingTaskPopupCreate}
                                  onNewTask={(task: TaskInterface) => createTask(task)}
-                                 tasks={tasksStore.getTasks()}
+                                 tasks={tasksStore.tasks}
                 />
             </PopupStateContextCreate.Provider>
             <PopupStateContextChange.Provider value={change}>
@@ -66,14 +67,15 @@ export const TodoApp = observer(() => {
             </PopupStateContextChange.Provider>
             <div className="header_todo">
                 <h1 className="title">TODOTask</h1>
-                <FunctionalTasks onCompleteTasks={tasksStore.markCompletedTasks}
-                                 onRemoveCompleteTask={tasksStore.deleteCompletedTasks}/>
+                <FunctionalTasks
+                    onCompleteTasks={() => tasksStore.markCompletedTasks().then(() => tasksStore.loadTasks())}
+                    onRemoveCompleteTask={() => tasksStore.deleteCompletedTasks().then(() => tasksStore.loadTasks())}/>
             </div>
-            <TasksContainer tasks={tasksStore.getTasks()}
+            <TasksContainer tasks={tasksStore.tasks}
                             onClosingPopup={closingTaskPopupChange}
                             onCompleteTask={setComplete}
                             onChangeTaskNew={changeTaskCreate}
-                            onRemoveTask={(id: number) => tasksStore.removeTask(id)}/>
+                            onRemoveTask={(id: number) => tasksStore.removeTask(id).then(() => tasksStore.loadTasks())}/>
             <ButtonCreateTask onChangeAscent={closingTaskPopupCreate}/>
         </div>
     )

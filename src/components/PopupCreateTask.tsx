@@ -1,5 +1,6 @@
 import React, {useContext, JSX} from "react";
-import {PopupStateContextCreate, TaskInterface} from "./TodoApp";
+import {PopupStateContextCreate} from "./TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
 type PopupCreateTaskProps = {
     onNewTask(task: TaskInterface): void

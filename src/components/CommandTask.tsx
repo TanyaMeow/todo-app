@@ -1,7 +1,7 @@
 import React, {JSX} from "react";
 import changeTask from '../icons/change.svg';
 import deleteTask from '../icons/delete.svg';
-import {TaskInterface} from "./TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
 type CommandTaskProps = {
     taskId: number,

@@ -1,6 +1,6 @@
-import {TaskInterface} from "../components/TodoApp";
+import {TaskInterface} from "../store/TasksStore";
 
-export interface TodoApi {
+interface TodoApi {
     get(): Promise<TaskInterface[]>
     post(task: TaskInterface): Promise<void>
     update(modifiedTask: TaskInterface): Promise<void>
