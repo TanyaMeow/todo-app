@@ -1,8 +1,7 @@
-import React from "react";
+import React, {JSX} from "react";
 import {Task} from "./Task";
 import {TaskInterface} from "./TodoApp";
 
-type TasksContainerState = {}
 type TasksContainerProps = {
     tasks: TaskInterface[]
     onClosingPopup(change: boolean): void,
@@ -11,7 +10,7 @@ type TasksContainerProps = {
     onChangeTaskNew(task: TaskInterface): void
 }
 
-export function TasksContainer(props: TasksContainerProps) {
+export function TasksContainer(props: TasksContainerProps): JSX.Element {
     return (
         <div className="tasks_container">
             {props.tasks.map((task: TaskInterface, key: number) => <Task key={key}

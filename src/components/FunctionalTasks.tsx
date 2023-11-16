@@ -1,14 +1,13 @@
-import React, {Component} from "react";
+import React, {JSX} from "react";
 import completedTasks from '../icons/task-square.svg';
 import deleteTasks from '../icons/note-remove.svg';
 
-type FunctionalTasksState = {}
 type FunctionalTasksProps = {
     onCompleteTasks(): void,
     onRemoveCompleteTask(): void
 }
 
-export function FunctionalTasks(props: FunctionalTasksProps) {
+export function FunctionalTasks(props: FunctionalTasksProps): JSX.Element {
     return (
         <div className="functional_task">
             <div className="mark_completed" onClick={() => props.onCompleteTasks()}>

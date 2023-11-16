@@ -3,64 +3,64 @@ import {TaskInterface} from "../components/TodoApp";
 import {MockTodoApi} from "../TodoApi/TodoApi";
 
 class TasksStore {
-    private todoApi = new MockTodoApi();
+    private todoApi: MockTodoApi = new MockTodoApi();
     tasks: TaskInterface[] = []
 
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this, undefined, {autoBind: true});
         this.loadTasks();
     }
 
-    private loadTasks() {
+    private loadTasks(): void {
         this.todoApi.get()
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks;
             })
     }
 
-    getTasks(): TaskInterface[] {
+    public getTasks(): TaskInterface[] {
         return this.tasks;
     }
 
-    createTask(task: TaskInterface) {
+    public createTask(task: TaskInterface): void {
         this.todoApi.post(task)
             .then(() => this.todoApi.get())
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks;
             })
     }
 
-    updateTasks(task: TaskInterface) {
+    public updateTasks(task: TaskInterface): void {
         this.todoApi.update(task)
             .then(() => this.todoApi.get())
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks
             })
     }
 
-    removeTask(id: number) {
+    public removeTask(id: number): void {
         this.todoApi.delete(id)
             .then(() => this.todoApi.get())
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks;
             })
     }
 
-    markCompletedTasks() {
+    public markCompletedTasks(): void {
         this.todoApi.markTasksCompleted()
             .then(() => this.todoApi.get())
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks;
             })
     }
 
-    deleteCompletedTasks() {
+    public deleteCompletedTasks(): void {
         this.todoApi.deleteCompletedTasks()
             .then(() => this.todoApi.get())
-            .then((tasks: TaskInterface[]) => {
+            .then((tasks: TaskInterface[]): void => {
                 this.tasks = tasks;
             })
     }
 }
 
-export const tasksStore = new TasksStore();
+export const tasksStore: TasksStore = new TasksStore();

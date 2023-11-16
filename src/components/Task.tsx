@@ -1,8 +1,7 @@
-import React from "react";
+import React, {JSX} from "react";
 import {CommandTask} from "./CommandTask";
 import {TaskInterface} from "./TodoApp";
 
-type TaskState = {}
 type TaskProps = {
     title: string,
     taskId: number,
@@ -13,7 +12,7 @@ type TaskProps = {
     onChangeTaskNew(task: TaskInterface): void
 }
 
-export function Task(props: TaskProps) {
+export function Task(props: TaskProps): JSX.Element {
         return (
             <div className="task" key={props.taskId}>
                 <div className="task_complete">

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {JSX} from 'react';
 import {TodoApp} from "./components/TodoApp";
 import './App.scss';
 
-function App() {
+function App(): JSX.Element {
   return (
       <div className="todo_block">
         <div className="todo_container">

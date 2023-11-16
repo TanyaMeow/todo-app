@@ -1,16 +1,14 @@
-import React, {useContext} from "react";
+import React, {useContext, JSX} from "react";
 import {PopupStateContextChange, TaskContext, TaskInterface} from "./TodoApp";
 
-type PopupChangeTaskState = {}
 type PopupChangeTaskProps = {
-    // taskCreate: TaskInterface
     onChangeTask(task: TaskInterface): void,
     onClosingPopup(change: boolean): void
 }
 
-export function PopupChangeTask(props: PopupChangeTaskProps) {
-    const change = useContext(PopupStateContextChange);
-    const task = useContext(TaskContext);
+export function PopupChangeTask(props: PopupChangeTaskProps): JSX.Element {
+    const change: boolean = useContext(PopupStateContextChange);
+    const task: TaskInterface = useContext(TaskContext);
 
     return (
         <div className="popup_container" style={{display: (change ? 'flex' : 'none')}}>

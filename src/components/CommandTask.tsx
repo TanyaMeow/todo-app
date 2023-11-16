@@ -1,9 +1,8 @@
-import React, {Component} from "react";
+import React, {JSX} from "react";
 import changeTask from '../icons/change.svg';
 import deleteTask from '../icons/delete.svg';
 import {TaskInterface} from "./TodoApp";
 
-type CommandTaskState = {}
 type CommandTaskProps = {
     taskId: number,
     title: string,
@@ -13,10 +12,10 @@ type CommandTaskProps = {
     onChangeTask(task: TaskInterface): void
 }
 
-export function CommandTask(props: CommandTaskProps) {
+export function CommandTask(props: CommandTaskProps): JSX.Element {
     return (
         <div className="commands_task">
-            <img src={changeTask} alt="" onClick={() => {
+            <img src={changeTask} alt="" onClick={(): void => {
                 props.onClosingPopup(true);
                 props.onChangeTask({
                     title: props.title,
