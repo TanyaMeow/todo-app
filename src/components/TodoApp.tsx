@@ -51,7 +51,6 @@ export function TodoApp() {
     function closingTaskPopupCreate(change: boolean): void {
         setAscent(change);
     }
-
     function closingTaskPopupChange(change: boolean): void {
         setChange(change);
     }
