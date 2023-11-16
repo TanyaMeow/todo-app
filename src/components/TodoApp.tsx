@@ -20,14 +20,17 @@ export const TodoApp = observer(() => {
         tasksStore.loadTasks();
     }, [])
 
+    // FIXME нет смысла в этой функции
     function closingTaskPopupCreate(change: boolean): void {
         setAscent(change);
     }
 
+    // FIXME нет смысла в этой функции
     function closingTaskPopupChange(change: boolean): void {
         setChange(change);
     }
 
+    // FIXME нет смысла в этой функции
     function changeTaskCreate(task: TaskInterface): void {
         setTask(task);
     }
