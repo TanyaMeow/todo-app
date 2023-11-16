@@ -33,7 +33,9 @@ export const TaskContext = createContext({completed: false, taskId: 0, title: ""
 
 export function TodoApp() {
     const todoApi: TodoApi = new MockTodoApi();
-
+    // FIXME создай 2 mobx стора TasksStore и TaskStore внутри храни состояние тас(ки/ок)
+    //  а также методы для взаимодействия, все обращения к api должны быть имплементированы в сторах,
+    //  компоненты ничего про api знать не должны
     const [ascent, setAscent] = useState(false);
     const [change, setChange] = useState(false);
     const [tasks, setTasks] = useState<TaskInterface[]>([]);
