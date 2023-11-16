@@ -1,15 +1,15 @@
 import {TaskInterface} from "../store/TasksStore";
 
 interface TodoApi {
-    get(): Promise<TaskInterface[]>
-    post(task: TaskInterface): Promise<void>
-    update(modifiedTask: TaskInterface): Promise<void>
-    delete(id: number): Promise<void>
-    deleteCompletedTasks(): Promise<void>
-    markTasksCompleted(): Promise<void>
+    get(): TaskInterface[]
+    post(task: TaskInterface): void
+    update(modifiedTask: TaskInterface): void
+    delete(id: number): void
+    deleteCompletedTasks(): void
+    markTasksCompleted(): void
 }
 
-// FIXME удали все запросы fetch. Это моковый сервис
+// FIXME удали все запросы fetch. Это моковый сервис (DONE)
 export class MockTodoApi implements TodoApi {
     private storage: Storage = localStorage;
 
@@ -21,68 +21,44 @@ export class MockTodoApi implements TodoApi {
         return (this.storage.getItem('tasks') === null) ? [] : JSON.parse(this.storage.getItem('tasks') as string)
     }
 
-    public async get(): Promise<TaskInterface[]> {
-        await fetch('https://jsonplaceholder.typicode.com/todos');
+    public get(): TaskInterface[] {
         return this.getTasks();
     }
 
-    public async post(task: TaskInterface): Promise<void> {
-        await fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'POST',
-            body: JSON.stringify(task),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        });
+    public post(task: TaskInterface): void {
         this.setTasks([...this.getTasks(), task]);
     }
 
-    public async update(modifiedTask: TaskInterface): Promise<void> {
-        await fetch('https://jsonplaceholder.typicode.com/todos/1', {
-            method: 'PUT',
-            body: JSON.stringify(modifiedTask),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        });
+    public update(modifiedTask: TaskInterface): void {
         const updatedTasks: TaskInterface[] = this.getTasks().map((task: TaskInterface): TaskInterface => {
             if (task.taskId === modifiedTask.taskId) {
                 return modifiedTask;
             }
             return task;
         });
+
         this.setTasks(updatedTasks);
     }
 
-    public async delete(id: number): Promise<void> {
-        await fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'DELETE',
-        });
+    public delete(id: number): void {
         const newTasks: TaskInterface[] = this.getTasks().filter((task: TaskInterface) => task.taskId !== id);
+
         this.setTasks(newTasks);
     }
 
-    public async deleteCompletedTasks(): Promise<void> {
-        await fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'DELETE',
-        });
+    public deleteCompletedTasks(): void {
         const newTasks: TaskInterface[] = this.getTasks().filter((task: TaskInterface) => !task.completed);
+
         this.setTasks(newTasks);
     }
 
-    public async markTasksCompleted(): Promise<void> {
-        await fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: 'POST',
-            body: JSON.stringify(null),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        });
+    public markTasksCompleted(): void {
         const complete: TaskInterface[] = this.getTasks().map((task: TaskInterface) => {
             task.completed = true;
 
             return task;
         });
+
         this.setTasks(complete);
     }
 }

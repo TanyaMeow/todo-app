@@ -16,34 +16,46 @@ class TasksStore {
         makeAutoObservable(this, undefined, {autoBind: true});
     }
 
-    public async loadTasks(): Promise<void> {
-        this.tasks = await this.todoApi.get();
+    public loadTasks(): void {
+        this.tasks = this.todoApi.get();
     }
 
-    public async createTask(task: TaskInterface): Promise<void> {
-        await this.todoApi.post(task);
+    public createTask(task: TaskInterface): void {
+        this.todoApi.post(task);
         this.tasks.push(task);
     }
 
-    public async updateTasks(task: TaskInterface): Promise<void> {
-        await this.todoApi.update(task);
-        // FIXME тут не push нужен. Нужно найти по taskId таску и заменить на обновленную
-        this.tasks.push(task);
+    public updateTasks(modifiedTask: TaskInterface): void {
+        this.todoApi.update(modifiedTask);
+        // FIXME тут не push нужен. Нужно найти по taskId таску и заменить на обновленную (DONE)
+        this.tasks = this.tasks.map((task: TaskInterface): TaskInterface => {
+            if (task.taskId === modifiedTask.taskId) {
+                return modifiedTask;
+            }
+            return task;
+        });
     }
 
-    public async removeTask(id: number): Promise<void> {
-        await this.todoApi.delete(id);
-        // FIXME нужно удалить из this.tasks
+    public removeTask(id: number): void {
+        this.todoApi.delete(id);
+        // FIXME нужно удалить из this.tasks (DONE)
+        this.tasks = this.tasks.filter((task: TaskInterface) => task.taskId !== id);
     }
 
-    public async markCompletedTasks(): Promise<void> {
-        await this.todoApi.markTasksCompleted();
-        // FIXME нужно обновить this.tasks
+    public markCompletedTasks(): void {
+        this.todoApi.markTasksCompleted();
+        // FIXME нужно обновить this.tasks (DONE)
+        this.tasks = this.tasks.map((task: TaskInterface) => {
+            task.completed = true;
+
+            return task;
+        });
     }
 
-    public async deleteCompletedTasks(): Promise<void> {
-        await this.todoApi.deleteCompletedTasks()
-        // FIXME нужно обновить this.tasks
+    public deleteCompletedTasks(): void {
+        this.todoApi.deleteCompletedTasks()
+        // FIXME нужно обновить this.tasks (DONE)
+        this.tasks = this.tasks.filter((task: TaskInterface) => !task.completed)
     }
 }
 

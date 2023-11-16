@@ -20,44 +20,31 @@ export const TodoApp = observer(() => {
         tasksStore.loadTasks();
     }, [])
 
-    // FIXME нет смысла в этой функции
-    function closingTaskPopupCreate(change: boolean): void {
-        setAscent(change);
-    }
+    // FIXME нет смысла в этой функции (DONE)
 
-    // FIXME нет смысла в этой функции
-    function closingTaskPopupChange(change: boolean): void {
-        setChange(change);
-    }
+    // FIXME нет смысла в этой функции (DONE)
 
-    // FIXME нет смысла в этой функции
-    function changeTaskCreate(task: TaskInterface): void {
-        setTask(task);
-    }
-
+    // FIXME нет смысла в этой функции (DONE)
     async function createTask(task: TaskInterface): Promise<void> {
         await tasksStore.createTask(task)
-        await tasksStore.loadTasks();
         setAscent(false);
     }
 
     async function changeTask(task: TaskInterface): Promise<void> {
         setTask(task);
         await tasksStore.updateTasks(task);
-        await tasksStore.loadTasks()
         setChange(false);
     }
 
     async function setComplete(task: TaskInterface): Promise<void> {
         setTask(task);
         await tasksStore.updateTasks(task);
-        await tasksStore.loadTasks();
     }
 
     return (
         <div className="todo_task_container">
             <PopupStateContextCreate.Provider value={ascent}>
-                <PopupCreateTask onClosingPopup={closingTaskPopupCreate}
+                <PopupCreateTask onClosingPopup={(change: boolean) => setAscent(change)}
                                  onNewTask={(task: TaskInterface) => createTask(task)}
                                  tasks={tasksStore.tasks}
                 />
@@ -65,21 +52,21 @@ export const TodoApp = observer(() => {
             <PopupStateContextChange.Provider value={change}>
                 <TaskContext.Provider value={task}>
                     <PopupChangeTask onChangeTask={changeTask}
-                                     onClosingPopup={closingTaskPopupChange}/>
+                                     onClosingPopup={(change: boolean) => setChange(change)}/>
                 </TaskContext.Provider>
             </PopupStateContextChange.Provider>
             <div className="header_todo">
                 <h1 className="title">TODOTask</h1>
                 <FunctionalTasks
-                    onCompleteTasks={() => tasksStore.markCompletedTasks().then(() => tasksStore.loadTasks())}
-                    onRemoveCompleteTask={() => tasksStore.deleteCompletedTasks().then(() => tasksStore.loadTasks())}/>
+                    onCompleteTasks={tasksStore.markCompletedTasks}
+                    onRemoveCompleteTask={tasksStore.deleteCompletedTasks}/>
             </div>
             <TasksContainer tasks={tasksStore.tasks}
-                            onClosingPopup={closingTaskPopupChange}
+                            onClosingPopup={(change: boolean) => setChange(change)}
                             onCompleteTask={setComplete}
-                            onChangeTaskNew={changeTaskCreate}
-                            onRemoveTask={(id: number) => tasksStore.removeTask(id).then(() => tasksStore.loadTasks())}/>
-            <ButtonCreateTask onChangeAscent={closingTaskPopupCreate}/>
+                            onChangeTaskNew={(task: TaskInterface) => setTask(task)}
+                            onRemoveTask={(id: number) => tasksStore.removeTask(id)}/>
+            <ButtonCreateTask onChangeAscent={(change: boolean) => setAscent(change)}/>
         </div>
     )
 })
