@@ -20,25 +20,20 @@ export const TodoApp = observer(() => {
         tasksStore.loadTasks();
     }, [])
 
-    // FIXME нет смысла в этой функции (DONE)
-
-    // FIXME нет смысла в этой функции (DONE)
-
-    // FIXME нет смысла в этой функции (DONE)
     async function createTask(task: TaskInterface): Promise<void> {
-        await tasksStore.createTask(task)
+        tasksStore.createTask(task)
         setAscent(false);
     }
 
     async function changeTask(task: TaskInterface): Promise<void> {
         setTask(task);
-        await tasksStore.updateTasks(task);
+        tasksStore.updateTasks(task);
         setChange(false);
     }
 
     async function setComplete(task: TaskInterface): Promise<void> {
         setTask(task);
-        await tasksStore.updateTasks(task);
+        tasksStore.updateTasks(task);
     }
 
     return (

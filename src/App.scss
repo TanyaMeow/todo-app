@@ -15,20 +15,24 @@ html {
   background-color: #07C7A4;
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+}
+
 .wrapper {
-  width: 600px;
+  max-width: 600px;
   height: 100%;
   font-family: "OpenSans Regular", sans-serif;
 }
 
 .todo_block {
+  width: 625px;
   height: 100%;
-  display: flex;
-  justify-content: center;
 }
 
 .todo_container {
-  padding: 20px 0;
+  padding: 20px;
 }
 
 .todo_task_container {
@@ -51,6 +55,7 @@ p {
   margin: 0;
   font-weight: 400;
   color: #21584a;
+  word-break: break-all;
 }
 
 .header_todo {
@@ -122,7 +127,8 @@ p {
 }
 
 .task {
-  height: 42px;
+  min-height: 42px;
+  height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
@@ -179,7 +185,7 @@ p {
 }
 
 .popup {
-  width: 400px;
+  max-width: 400px;
   height: 200px;
   background-color: #FFF;
   border-radius: 10px;
@@ -202,7 +208,6 @@ p {
 .create-task {
   background-color: #F2F2F2;
   border: 1px solid #07C7A4;
-  width: 400px;
   height: 30px;
   border-radius: 7px 0 0 7px;
   padding: 1px 10px;
@@ -213,7 +218,7 @@ p {
 }
 
 .button-popup_create-task {
-  width: 120px;
+  max-width: 120px;
   height: 34px;
   background-color: #07C7A4;
   border: 1px solid #07C7A4;
@@ -239,5 +244,11 @@ p {
     cursor: pointer;
     color: #c70707;
     transition: 0.5s;
+  }
+}
+
+@media (max-width: 450px) {
+  .button_create-task {
+    width: 152px;
   }
 }

@@ -9,7 +9,6 @@ interface TodoApi {
     markTasksCompleted(): void
 }
 
-// FIXME удали все запросы fetch. Это моковый сервис (DONE)
 export class MockTodoApi implements TodoApi {
     private storage: Storage = localStorage;
 
